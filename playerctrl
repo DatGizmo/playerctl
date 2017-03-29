@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+import src
+import sys
+
+if __name__ == "__main__":
+    src.main(sys.argv[1:])
+
