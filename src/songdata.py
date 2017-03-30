@@ -15,7 +15,7 @@ class SongData(object):
         if self.album:
             retval += self.album + " - "
         if self.track:
-            retval += self.track + "."
+            retval += str(self.track) + "."
         if self.title:
             retval += self.title
         if not retval:
