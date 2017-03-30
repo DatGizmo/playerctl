@@ -32,10 +32,10 @@ class MpdPlayer(Player):
         return td
 
     def toggle(s):
-        if(s.mpc.status()['state'] != "play"):
-            s.mpc.play()
-        else:
+        if(s.playing()):
             s.mpc.pause()
+        else:
+            s.mpc.play()
 
     def play(s):
         s.mpc.play()
