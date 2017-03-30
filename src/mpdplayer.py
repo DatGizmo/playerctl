@@ -15,11 +15,7 @@ class MpdPlayer(Player):
 
     def getSongData(s):
         song = s.mpc.currentsong()
-        artist = ''
-        album = ''
-        track = ''
-        title = ''
-        td = SongData(artist, album, track, title)
+        td = SongData('', '', '', '', '')
         if 'artist' in song:
             td.artist = song['artist']
         if 'album' in song:
@@ -28,6 +24,13 @@ class MpdPlayer(Player):
             td.track = song['track']
         if 'title' in song:
             td.title = song['title']
+        if 'file' in song:
+            name = song['file']
+            pos = name.rfind('/')
+            if pos > 0:
+                td.filename = name[pos+1:]
+            else:
+                td.filename = name
         
         return td
 

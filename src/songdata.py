@@ -1,12 +1,13 @@
 import requests
 
 class SongData(object):
-    def __init__(self, artist, album, track, title):
+    def __init__(self, artist, album, track, title, fn):
         self.artist = artist
         self.album = album
         self.track = track
         self.title = title
         self.lyric = ''
+        self.filename = fn
 
     def __str__(self):
         retval = ''
@@ -19,7 +20,7 @@ class SongData(object):
         if self.title:
             retval += self.title
         if not retval:
-            retval = "No data set"
+            retval = self.filename
         return retval
 
     def toString(self):
