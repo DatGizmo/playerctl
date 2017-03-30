@@ -31,12 +31,6 @@ class MpdPlayer(Player):
         
         return td
 
-    def metadata(s):
-        if(s.playing()):
-            print (s.getMetaData())
-        else:
-            print("Pause/Stopped")
-
     def toggle(s):
         if(s.mpc.status()['state'] != "play"):
             s.mpc.play()
