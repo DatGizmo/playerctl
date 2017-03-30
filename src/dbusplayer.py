@@ -15,15 +15,24 @@ class DbusPlayer(Player):
     def playing(s):
         return ('play' in s.status.lower())
 
-    def getMetaData(s):
-        return SongData(s.mplayer.player.Metadata['xesam:artist'][0], s.mplayer.player.Metadata['xesam:album'], str(s.mplayer.player.Metadata['xesam:trackNumber']), s.mplayer.player.Metadata['xesam:title'])
+    def getSongData(s):
+        song = s.mplayer.player.Metadata
+        artist = ''
+        album = ''
+        track = ''
+        title = ''
+        td = SongData(artist, album, track, title)
+        if 'xesam:artist' in song:
+            td.artist = song['xesam:artist'][0]
+        if 'xesam:album' in song:
+            td.album = song['xesam:album']
+        if 'xesam:trackNumber' in song:
+            td.track = song["xesam:trackNumber"]
+        if 'xesam:title' in song:
+            td.title = song['xesam:title']
 
-    def metadata(s):
-        if s.playing():
-            print(s.getMetaData())
-        else:
-            print("Pause/Stopped")
-        
+        return td
+
     def toggle(s):
         s.iface.PlayPause()
 
