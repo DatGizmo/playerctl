@@ -67,7 +67,9 @@ class Player:
         printstr=""
         maxlen = 40
         mod = 15
-        titel = s.getSongData().toString()
+        titel = "Paused/Stopped"
+        if s.playing():
+            titel = s.getSongData().toString()
         length = len(titel)
         steps = int(math.ceil((float(length)+3)/mod))
 
