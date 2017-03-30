@@ -25,7 +25,7 @@ class MpdPlayer(Player):
         if 'album' in song:
             td.album = song['album']
         if 'track' in song:
-            td.track = song["track"]
+            td.track = song['track']
         if 'title' in song:
             td.title = song['title']
         
