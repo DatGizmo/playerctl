@@ -60,7 +60,3 @@ class DbusPlayer(Player):
     def seek(self, vol):
         pass
 
-    def lyric(self):
-        pass
-
- 
