@@ -14,12 +14,14 @@ class Player:
         pass
 
     @abstractmethod
-    def getMetaData(self):
+    def getSongData(self):
         pass
 
-    @abstractmethod
     def metadata(self):
-        pass
+        if self.playing():
+            print(self.getSongData())
+        else:
+            print("Paused/Stopped")
 
     @abstractmethod
     def play(self):
@@ -58,16 +60,14 @@ class Player:
         pass
 
     def lyric(s):
-        sd = s.getMetaData()
+        sd = s.getSongData()
         sd.getLyric()
 
     def tmux(s):
         printstr=""
         maxlen = 40
         mod = 15
-        titel = "Pause/Stopped"
-        if s.playing():
-            titel = s.getMetaData().toString()
+        titel = s.getSongData().toString()
         length = len(titel)
         steps = int(math.ceil((float(length)+3)/mod))
 
