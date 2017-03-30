@@ -27,7 +27,7 @@ class DbusPlayer(Player):
         if 'xesam:album' in song:
             td.album = song['xesam:album']
         if 'xesam:trackNumber' in song:
-            td.track = song["xesam:trackNumber"]
+            td.track = song['xesam:trackNumber']
         if 'xesam:title' in song:
             td.title = song['xesam:title']
 
