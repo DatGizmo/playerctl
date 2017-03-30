@@ -53,6 +53,10 @@ class Player:
     def seek(self, vol):
         pass
 
+    @abstractmethod
+    def playing(self):
+        pass
+
     def lyric(s):
         sd = s.getMetaData()
         sd.getLyric()
@@ -61,7 +65,9 @@ class Player:
         printstr=""
         maxlen = 40
         mod = 15
-        titel = s.getMetaData().toString()
+        titel = "Pause/Stopped"
+        if s.playing():
+            titel = s.getMetaData().toString()
         length = len(titel)
         steps = int(math.ceil((float(length)+3)/mod))
 

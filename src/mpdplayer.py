@@ -10,6 +10,9 @@ class MpdPlayer(Player):
         s.mpc.connect(host, port)
         s.mpc.password(passwd)
 
+    def playing(s):
+        return (s.mpc.status()['state'] == "play")
+
     def getMetaData(s):
         song = s.mpc.currentsong()
         artist = ''
@@ -29,11 +32,10 @@ class MpdPlayer(Player):
         return td
 
     def metadata(s):
-        if(s.mpc.status()['state'] != "play"):
-            print("Pause/Stopped")
+        if(s.playing()):
+            print (s.getMetaData())
         else:
-            titel = s.getMetaData()
-            print titel
+            print("Pause/Stopped")
 
     def toggle(s):
         if(s.mpc.status()['state'] != "play"):

@@ -12,13 +12,15 @@ class DbusPlayer(Player):
         s.mplayer = pympris.MediaPlayer(players_ids[0], s.bus)
         s.status = s.mplayer.player.PlaybackStatus
 
+    def playing(s):
+        return ('play' in s.status.lower())
+
     def getMetaData(s):
         return SongData(s.mplayer.player.Metadata['xesam:artist'][0], s.mplayer.player.Metadata['xesam:album'], str(s.mplayer.player.Metadata['xesam:trackNumber']), s.mplayer.player.Metadata['xesam:title'])
 
     def metadata(s):
-        if 'play' in s.status.lower():
-            titel = s.getMetaData()
-            print(titel)
+        if s.playing():
+            print(s.getMetaData())
         else:
             print("Pause/Stopped")
         
