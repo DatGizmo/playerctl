@@ -88,9 +88,9 @@ class Player:
             if(prlen < maxlen):
                 printstr = printstr + " | " + titel[0:(maxlen-prlen)]
                 printstr = printstr[0:maxlen]
-            print(printstr).encode('utf-8')
+            print printstr
         else:
-            print(titel).encode('utf-8')
+            print titel
 
     def action(s, task, seekTime):
         if(task == Tasks.Daemon):

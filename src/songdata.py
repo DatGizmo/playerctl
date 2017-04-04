@@ -21,7 +21,7 @@ class SongData(object):
             retval += self.title
         if not retval:
             retval = self.filename
-        return retval
+        return unicode(retval)
 
     def toString(self):
         return self.__str__()
