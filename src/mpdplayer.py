@@ -59,7 +59,7 @@ class MpdPlayer(Player):
         vol = int(s.mpc.status()['volume'])
         s.mpc.setvol(vol+3)
 
-    def voldec(self):
+    def voldec(s):
         vol = int(s.mpc.status()['volume'])
         s.mpc.setvol(vol-3)
 
