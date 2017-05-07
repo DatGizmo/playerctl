@@ -64,5 +64,5 @@ class MpdPlayer(Player):
         s.mpc.setvol(vol-3)
 
     def seek(s, val):
-        s.seekcur(val)
+        s.mpc.seekcur(val)
 
