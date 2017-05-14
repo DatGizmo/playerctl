@@ -96,12 +96,12 @@ def parscmd(argv):
                 seekTime = timestr
         elif opt in ("--artist"):
             if songData is None:
-                songData = SongData(arg, '', '', '')
+                songData = SongData(arg, '', '', '', '')
             else:
                 songData.artist = arg
         elif opt in ("--title"):
             if songData is None:
-                songData = TitleData('', '', '', title)
+                songData = SongData('', '', '', arg, '')
             else:
                 songData.title = arg
         else:
@@ -137,12 +137,12 @@ def main(argv):
     parscmd(argv)
     if(target == None):
         target = getRunningPlayer()
-    if(target == None):
-        print("No running player found")
-        sys.exit(1)
 
     if(task == Tasks.Lyric and songData != None):
         songData.getLyric()
-    else:
+    elif(target != None):
         target.action(task, seekTime)
+    elif(target == None):
+        print("No running player found")
+        sys.exit(1)
  
