@@ -130,7 +130,7 @@ def createSpotify():
     SPOTIFY = 'org.mpris.MediaPlayer2.spotify'
     SPOT_PATH = '/org/mpris/MediaPlayer2'
     SPOT_VLC_IFACE = 'org.mpris.MediaPlayer2.Player'
-    return DbusPlayer(SPOTIFY, SPOT_PATH, SPOT_VLC_IFACE) 
+    return DbusPlayer(SPOTIFY, SPOT_PATH, SPOT_VLC_IFACE, "Spotify")
 
 def main(argv):
     global task, songData, target
