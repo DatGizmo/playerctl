@@ -109,7 +109,7 @@ class Player:
         elif(task == Tasks.Next):
             s.next()
         elif(task == Tasks.Prev):
-            s.previous()
+            s.prev()
         elif(task == Tasks.Toggle):
             s.toggle()
         elif(task == Tasks.VolInc):
