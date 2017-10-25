@@ -117,6 +117,8 @@ def getPid(player):
     
 def getRunningPlayer():
     if(getPid("spotify")):
+        print("spotify dbus support is broken!");
+        exit();
         return createSpotify()
     elif(getPid("mpd")):
         return createMpd()
