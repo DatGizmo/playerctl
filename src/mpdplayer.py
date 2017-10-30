@@ -13,6 +13,9 @@ class MpdPlayer(Player):
     def playing(s):
         return (s.mpc.status()['state'] == "play")
 
+    def classname(s):
+        return "MPD"
+
     def getSongData(s):
         song = s.mpc.currentsong()
         td = SongData('', '', '', '', '')

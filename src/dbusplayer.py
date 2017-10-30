@@ -4,16 +4,20 @@ import pympris
 from songdata import SongData
 
 class DbusPlayer(Player):
-    def __init__(s, dest, path, ifacen):
+    def __init__(s, dest, path, ifacen, n):
         s.bus = dbus.SessionBus()
         s.obj = s.bus.get_object(dest, path)
         s.iface = dbus.Interface(s.obj, dbus_interface=ifacen)
         players_ids = list(pympris.available_players())
         s.mplayer = pympris.MediaPlayer(players_ids[0], s.bus)
         s.status = s.mplayer.player.PlaybackStatus
+        s.name = n
 
     def playing(s):
         return ('play' in s.status.lower())
+
+    def classname(s):
+        return s.name
 
     def getSongData(s):
         song = s.mplayer.player.Metadata

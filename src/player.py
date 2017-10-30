@@ -21,7 +21,7 @@ class Player:
         if self.playing():
             print(self.getSongData())
         else:
-            print("Paused/Stopped")
+            print(self.classname() + ": Paused/Stopped")
 
     @abstractmethod
     def play(self):
@@ -59,6 +59,10 @@ class Player:
     def playing(self):
         pass
 
+    @abstractmethod
+    def classname(self):
+        pass
+
     def lyric(s):
         sd = s.getSongData()
         sd.getLyric()
@@ -67,7 +71,7 @@ class Player:
         printstr=""
         maxlen = 40
         mod = 15
-        titel = "Paused/Stopped"
+        titel = s.classname() + ": Paused/Stopped"
         if s.playing():
             titel = s.getSongData().toString()
         length = len(titel)
@@ -105,7 +109,7 @@ class Player:
         elif(task == Tasks.Next):
             s.next()
         elif(task == Tasks.Prev):
-            s.previous()
+            s.prev()
         elif(task == Tasks.Toggle):
             s.toggle()
         elif(task == Tasks.VolInc):
