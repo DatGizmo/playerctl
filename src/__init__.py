@@ -120,7 +120,6 @@ def testMpdHost():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect(('MpdHost', 6600))
-        print "Mpd reachable"
         return True
     except socket.error as e:
         print "Error on connect: %s" % e
@@ -129,8 +128,6 @@ def testMpdHost():
 
 def getRunningPlayer():
     if(getPid("spotify")):
-        print("spotify dbus support is broken!");
-        exit();
         return createSpotify()
     elif(getPid("mpd") or testMpdHost()):
         return createMpd()
