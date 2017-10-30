@@ -114,11 +114,23 @@ def getPid(player):
         if str(player) in str(p.name):
             return True
     return False
-    
+
+import socket
+def testMpdHost():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        s.connect(('MpdHost', 6600))
+        print "Mpd reachable"
+        return True
+    except socket.error as e:
+        print "Error on connect: %s" % e
+    finally:
+        s.close()
+
 def getRunningPlayer():
     if(getPid("spotify")):
         return createSpotify()
-    elif(getPid("mpd")):
+    elif(getPid("mpd") or testMpdHost()):
         return createMpd()
     else:
         return None
