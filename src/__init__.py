@@ -129,6 +129,9 @@ def testMpdHost():
 def getRunningPlayer():
     if(getPid("spotify")):
         return createSpotify()
+    elif(getPid("Nuvo")):
+        print("amazon");
+        return createAmazon()
     elif(getPid("mpd") or testMpdHost()):
         return createMpd()
     else:
@@ -142,6 +145,12 @@ def createSpotify():
     SPOT_PATH = '/org/mpris/MediaPlayer2'
     SPOT_VLC_IFACE = 'org.mpris.MediaPlayer2.Player'
     return DbusPlayer(SPOTIFY, SPOT_PATH, SPOT_VLC_IFACE, "Spotify")
+
+def createAmazon():
+    AMAZON = 'org.mpris.MediaPlayer2.NuvolaOseAppAmazonCloudPlayer'
+    AMAZON_PATH = '/org/mpris/MediaPlayer2'
+    AMAZON_VLC_IFACE = 'org.mpris.MediaPlayer2.Player'
+    return DbusPlayer(AMAZON, AMAZON_PATH, AMAZON_VLC_IFACE, "Amazon")
 
 def main(argv):
     global task, songData, target
