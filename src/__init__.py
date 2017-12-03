@@ -122,7 +122,8 @@ def testMpdHost():
         s.connect(('MpdHost', 6600))
         return True
     except socket.error as e:
-        print "Error on connect: %s" % e
+        return False
+        #print "Error on connect: %s" % e
     finally:
         s.close()
 
