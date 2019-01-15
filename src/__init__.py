@@ -68,6 +68,9 @@ def parscmd(argv):
             task = Tasks.Lyric
         elif opt == '-D':
             task = Tasks.Daemon
+        elif opt in ("--help"):
+            printhelp()
+            sys.exit(0)
         elif opt in ("--pause"):
             task = Tasks.Pause
         elif opt in ("--player"):
