@@ -1,13 +1,15 @@
 import requests
+from datetime import datetime
 
 class SongData(object):
-    def __init__(self, artist, album, track, title, fn):
+    def __init__(self, artist, album, track, title, fn, length):
         self.artist = artist
         self.album = album
         self.track = track
         self.title = title
         self.lyric = ''
         self.filename = fn
+        self.lenght = length
 
     def __str__(self):
         retval = ''
@@ -21,6 +23,9 @@ class SongData(object):
             retval += self.title
         if not retval:
             retval = self.filename
+        if self.length:
+            retval +=  " - " + datetime.fromtimestamp(self.length).strftime('%M:%S')
+
         return unicode(retval)
 
     def toString(self):

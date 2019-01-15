@@ -18,7 +18,7 @@ class MpdPlayer(Player):
 
     def getSongData(s):
         song = s.mpc.currentsong()
-        td = SongData('', '', '', '', '')
+        td = SongData('', '', '', '', '', 0)
         if 'artist' in song:
             td.artist = song['artist']
         if 'album' in song:
@@ -34,6 +34,8 @@ class MpdPlayer(Player):
                 td.filename = name[pos+1:]
             else:
                 td.filename = name
+        if 'time' in song:
+            td.length = float(song['time'])
         
         return td
 
