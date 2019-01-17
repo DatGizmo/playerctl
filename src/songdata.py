@@ -2,7 +2,7 @@ import requests
 from datetime import datetime
 
 class SongData(object):
-    def __init__(self, artist, album, track, title, fn, length):
+    def __init__(self, artist, album, track, title, fn, length, elapsed):
         self.artist = artist
         self.album = album
         self.track = track
@@ -10,6 +10,7 @@ class SongData(object):
         self.lyric = ''
         self.filename = fn
         self.lenght = length
+        self.elapsed = elapsed
 
     def __str__(self):
         retval = ''
@@ -23,8 +24,14 @@ class SongData(object):
             retval += self.title
         if not retval:
             retval = self.filename
+        if self.elapsed != 0:
+            retval += " - " + datetime.fromtimestamp(self.elapsed).strftime('%M:%S')
         if self.length:
-            retval +=  " - " + datetime.fromtimestamp(self.length).strftime('%M:%S')
+            if self.elapsed == 0:
+                retval += " - "
+            else:
+                retval += "/"
+            retval += datetime.fromtimestamp(self.length).strftime('%M:%S')
 
         return unicode(retval)
 
