@@ -1,10 +1,7 @@
 from abc import ABCMeta, abstractmethod
-from tasks import Tasks
+from src.tasks import Tasks
 import math
 import datetime
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 
 class Player:
     __metaclass__ = ABCMeta
@@ -92,9 +89,9 @@ class Player:
             if(prlen < maxlen):
                 printstr = printstr + " | " + titel[0:(maxlen-prlen)]
                 printstr = printstr[0:maxlen]
-            print printstr
+            print(printstr)
         else:
-            print titel
+            print(titel)
 
     def action(s, task, seekTime):
         if(task == Tasks.Daemon):

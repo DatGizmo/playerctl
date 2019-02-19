@@ -1,7 +1,7 @@
-from player import Player
+from src.player import Player
 import dbus
 import pympris
-from songdata import SongData
+from src.songdata import SongData
 
 class DbusPlayer(Player):
     def __init__(s, dest, path, ifacen, n):

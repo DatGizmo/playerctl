@@ -99,12 +99,12 @@ def parscmd(argv):
                 seekTime = timestr
         elif opt in ("--artist"):
             if songData is None:
-                songData = SongData(arg, '', '', '', '')
+                songData = SongData(arg, '', '', '', '', 0, 0)
             else:
                 songData.artist = arg
         elif opt in ("--title"):
             if songData is None:
-                songData = SongData('', '', '', arg, '')
+                songData = SongData('', '', '', arg, '', 0, 0)
             else:
                 songData.title = arg
         else:

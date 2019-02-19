@@ -1,5 +1,5 @@
-from player import Player
-from songdata import SongData
+from src.player import Player
+from src.songdata import SongData
 from mpd import MPDClient
 
 class MpdPlayer(Player):
