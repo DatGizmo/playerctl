@@ -31,6 +31,7 @@ def printhelp():
     print('              --seek=    seek in sec, a leading "-" will seek backwards')
     print('              --artist   set artist for direct lyric search')
     print('              --title    set title for direct lyric search')
+    print('              --album    set album for direct lyric search')
     print('              -D         daemon; fetches lyrics and prints to the console')
     print('                                 only works with mpd')
     print('     player:  if player is empty the player is auto detected')
@@ -40,7 +41,7 @@ def printhelp():
 def parscmd(argv):
     global task, target, seekTime, songData
     try:
-        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "pause"])
+        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause"])
     except getopt.GetoptError:
         printhelp()
         sys.exit(2)
@@ -107,6 +108,11 @@ def parscmd(argv):
                 songData = SongData('', '', '', arg, '', 0, 0)
             else:
                 songData.title = arg
+        elif opt in ("--album"):
+            if songData is None:
+                songData = SongData('', arg, '', '', '', 0, 0)
+            else:
+                songData.album= arg
         else:
             print("Unkown option %s"% opt);
             printhelp()
