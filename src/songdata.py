@@ -51,77 +51,47 @@ class SongData(object):
         return self.__str__()
 
     def setPaths(self):
-        self.artistroot = path.join(self.lyricroot, self.artist.lower()).replace(' ', '-')
-        self.albumroot = path.join(self.artistroot, self.album.lower()).replace(' ', '-')
-        self.lyricspath = path.join(self.albumroot, self.title.lower() + '.txt').replace(' ', '-')
+        self.artistroot = path.join(self.lyricroot, self.artist).replace(' ', '-')
+        self.albumroot = path.join(self.artistroot, self.album).replace(' ', '-')
+        self.lyricspath = path.join(self.albumroot, self.title + '.txt').replace(' ', '-')
 
-    def checkFileExists(self, create=False):
+    def checkFolderExists(self, create=False):
         exists = False
         if(not self.album or not self.artist):
             return self.searchFolder()
         self.setPaths()
-        print(self.artistroot)
         if path.exists(self.artistroot):
-            print(self.albumroot)
             if path.exists(self.albumroot):
-                print(self.lyricspath)
-                if path.exists(self.lyricspath):
-                    print("True")
-                    exists = True
+                exists = True
         if(False == exists and True == create):
-            makedirs(path.join(self.lyricroot, self.artist.lower(), self.album.lower()).replace(' ', '-'))
-            exists = True
-        if(not exists and self.searchFolder()):
+            makedirs(path.join(self.lyricroot, self.artist, self.album).replace(' ', '-'))
             exists = True
         return exists
+
+    def checkFileExists(self, create=False):
+        fpexists = False
+        if(self.checkFolderExists(create)):
+            if path.exists(self.lyricspath):
+                fpexists = True
+        if(not fpexists and self.searchFolder()):
+            fpexists = True
+        return fpexists
 
     def fetchFromProvider(self, provider):
         if provider:
             data = provider.get_lyrics(self.artist)
             data.save()
-            # Move all to lower case version
-            for root, dirs, files in walk(self.lyricroot):
-                for dr in dirs:
-                    if self.artist.lower().replace(' ', '-') in dr.lower():
-                        artsrc = dr
-                        artdest = dr.lower()
-                        if(not path.exists(path.join(root, artdest))):
-                            move(path.join(root, artsrc), path.join(root, artdest))
-                            artsrc = artdest
-                        for root2, dirs2, files2 in walk(path.join(root, artsrc)):
-                            for drr in dirs2:
-                                albumsrc = drr
-                                albumdest = drr.lower()
-                                if(not path.exists(path.join(root, artdest, albumdest))):
-                                    move(path.join(root2,  albumsrc), path.join(root, artdest, albumdest))
-                                    albumsrc = albumdest
-                                    print(albumsrc)
-                                for root3, dirs3, files3 in walk(path.join(root, artsrc, albumsrc)):
-                                    for fp in files3:
-                                        move(path.join(root3, fp), path.join(root, artdest, albumdest, fp.lower()))
-                                rmalbump = path.join(root, dr, drr)
-                                if(path.exists(rmalbump)):
-                                    try:
-                                        removedirs(rmalbump)
-                                    except OSError:
-                                        pass
-                            rmartp = path.join(root, dr)
-                            if(path.exists(rmartp)):
-                                try:
-                                    removedirs(path.join(root, dr)) 
-                                except OSError:
-                                    pass
 
     def fetchLyric(self):
         print("Fetching artists lyrics with lyricsmaster using Genius")
         self.fetchFromProvider(Genius())
         if(not self.checkFileExists()):
+            print("Fetching artists lyrics with lyricsmaster using LyricWiki")
+            self.fetchFromProvider(LyricWiki())
+            if(not self.checkFileExists()):
+               return 
+        if(self.title):
             self.getLyricFromFile()
-#           print("Fetching artists lyrics with lyricsmaster using LyricWiki")I
-#            self.fetchFromProvider(LyricWiki())
-#            if(not self.checkFileExists()):
-#               return 
-
 
     def getLyricFromFile(self):
         fp = open(self.lyricspath)
@@ -135,7 +105,7 @@ class SongData(object):
         if("Sorry, We don't have lyrics for this song yet" not in r.text):
             self.lyric = r.text
             if(self.album):
-                self.checkFileExists(True)
+                self.checkFolderExists(True)
                 fp = open(self.lyricspath, 'w+')
                 fp.write(self.lyric)
                 fp.close()
@@ -145,8 +115,9 @@ class SongData(object):
         retval = False
         fileName = self.title.replace(' ', '-') + ".txt"
         for root, dirs, files in walk(self.lyricroot):
-            if fileName.lower() in files:
-                result.append(path.join(root, fileName.lower()))
+            for fp in files:
+                if fileName.lower() in fp.lower():
+                    result.append(path.join(root, fp))
         if len(result) >= 1:
             self.lyricspath = result[0]
             self.getLyricFromFile()
@@ -156,8 +127,11 @@ class SongData(object):
         return retval
 
     def getLyric(self):
-        if self.title and not self.artist or not self.album:
+        if self.title and (not self.artist or not self.album):
             self.searchFolder()
+        elif(self.artist and not self.title and not self.album):
+            self.fetchLyric()
+            return
         elif(self.checkFileExists()):
             if not self.lyric:
                 self.getLyricFromFile()
