@@ -80,7 +80,8 @@ class SongData(object):
     def fetchFromProvider(self, provider):
         if provider:
             data = provider.get_lyrics(self.artist)
-            data.save()
+            if data:
+                data.save()
 
     def fetchLyric(self):
         print("Fetching artists lyrics with lyricsmaster using Genius")
@@ -89,7 +90,7 @@ class SongData(object):
             print("Fetching artists lyrics with lyricsmaster using LyricWiki")
             self.fetchFromProvider(LyricWiki())
             if(not self.checkFileExists()):
-               return 
+               return
         if(self.title):
             self.getLyricFromFile()
 
@@ -98,7 +99,7 @@ class SongData(object):
         self.lyric = fp.read()
         fp.close()
 
-    def fetchFromMIP(self): 
+    def fetchFromMIP(self):
         print("Fetching with MIP")
         payload = {'artist': self.artist, 'title': self.title}
         r = requests.get('https://makeitpersonal.co/lyrics', params = payload)
