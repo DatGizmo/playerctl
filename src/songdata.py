@@ -127,18 +127,18 @@ class SongData(object):
             print("Could not find file with lyrics for \"%s\"" % self.title)
         return retval
 
-    def getLyric(self):
+    def getLyric(self, nofetch):
         if self.title and (not self.artist or not self.album):
             self.searchFolder()
-        elif(self.artist and not self.title and not self.album):
+        elif(not nofetch and self.artist and not self.title and not self.album):
             self.fetchLyric()
             return
         elif(self.checkFileExists()):
             if not self.lyric:
                 self.getLyricFromFile()
-        if self.title and self.artist and not self.lyric:
+        if not nofetch and self.title and self.artist and not self.lyric:
             self.fetchFromMIP()
-        if self.artist and not self.lyric:
+        if not nofetch and self.artist and not self.lyric:
             self.fetchLyric()
 
         if self.lyric:

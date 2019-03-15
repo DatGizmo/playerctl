@@ -39,9 +39,9 @@ def printhelp():
     print('              mpd')
 
 def parscmd(argv):
-    global task, target, seekTime, songData
+    global task, target, seekTime, songData, nofetch
     try:
-        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause"])
+        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause", "no-fetch"])
     except getopt.GetoptError:
         printhelp()
         sys.exit(2)
@@ -113,6 +113,8 @@ def parscmd(argv):
                 songData = SongData('', arg, '', '', '', 0, 0)
             else:
                 songData.album= arg
+        elif opt in ("--no-fetch"):
+            nofetch = True
         else:
             print("Unkown option %s"% opt);
             printhelp()
@@ -163,16 +165,17 @@ def createAmazon():
     return DbusPlayer(AMAZON, AMAZON_PATH, AMAZON_VLC_IFACE, "Amazon")
 
 def main(argv):
-    global task, songData, target
+    global task, songData, target, nofetch
+    nofetch = False
     parscmd(argv)
     if(target == None):
         target = getRunningPlayer()
 
     if(task == Tasks.Lyric and songData != None):
-        songData.getLyric()
+        songData.getLyric(nofetch)
     elif(target != None):
-        target.action(task, seekTime)
+        target.action(task, seekTime, nofetch)
     elif(target == None):
         print("No running player found")
         sys.exit(1)
- 
+
