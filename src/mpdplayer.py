@@ -39,7 +39,7 @@ class MpdPlayer(Player):
             td.length = float(song['time'])
         if 'elapsed' in status:
             td.elapsed = float(status['elapsed'])
-        
+
         return td
 
     def toggle(s):

@@ -120,9 +120,9 @@ class Player:
         elif(task == Tasks.Seek):
             s.seek(seekTime)
         elif(task == Tasks.MetaData):
-            s.metadata() 
+            s.metadata()
         elif(task == Tasks.Tmux):
-            s.tmux() 
+            s.tmux()
         elif(task == Tasks.Lyric):
             s.lyric(nofetch)
 
