@@ -148,5 +148,7 @@ class SongData(object):
                 self.lyric = self.lyric[0:len(self.lyric)-1]
 
             print(self)
+            if self.lyric[0] != '\n':
+                print()
             print(self.lyric)
 
