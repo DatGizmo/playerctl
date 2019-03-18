@@ -1,7 +1,5 @@
 import requests
 from datetime import datetime
-from lyricsmaster import Genius
-from lyricsmaster import LyricWiki
 from os.path import expanduser
 from os import path
 from os import makedirs
@@ -51,11 +49,14 @@ class SongData(object):
         return self.__str__()
 
     def setPaths(self):
-        self.artistroot = path.join(self.lyricroot, self.artist).replace(' ', '-')
-        self.albumroot = path.join(self.artistroot, self.album).replace(' ', '-')
-        self.lyricspath = path.join(self.albumroot, self.title + '.txt').replace(' ', '-')
+        if(self.artist):
+            self.artistroot = path.join(self.lyricroot, self.artist).replace(' ', '-')
+        if(self.album):
+            self.albumroot = path.join(self.artistroot, self.album).replace(' ', '-')
+        if(self.title):
+            self.lyricspath = path.join(self.albumroot, self.title + '.txt').replace(' ', '-')
 
-    def checkFolderExists(self, create=False):
+    def checkFolderExists(self):
         exists = False
         if(not self.album or not self.artist):
             return self.searchFolder()
@@ -63,53 +64,21 @@ class SongData(object):
         if path.exists(self.artistroot):
             if path.exists(self.albumroot):
                 exists = True
-        if(False == exists and True == create):
-            makedirs(path.join(self.lyricroot, self.artist, self.album).replace(' ', '-'))
-            exists = True
         return exists
 
-    def checkFileExists(self, create=False):
+    def checkFileExists(self):
         fpexists = False
-        if(self.checkFolderExists(create)):
+        if(self.checkFolderExists()):
             if path.exists(self.lyricspath):
                 fpexists = True
         if(not fpexists and self.searchFolder()):
             fpexists = True
         return fpexists
 
-    def fetchFromProvider(self, provider):
-        if provider:
-            data = provider.get_lyrics(self.artist)
-            if data:
-                data.save()
-
-    def fetchLyric(self):
-        print("Fetching artists lyrics with lyricsmaster using Genius")
-        self.fetchFromProvider(Genius())
-        if(not self.checkFileExists()):
-            print("Fetching artists lyrics with lyricsmaster using LyricWiki")
-            self.fetchFromProvider(LyricWiki())
-            if(not self.checkFileExists()):
-               return
-        if(self.title):
-            self.getLyricFromFile()
-
     def getLyricFromFile(self):
         fp = open(self.lyricspath)
         self.lyric = fp.read()
         fp.close()
-
-    def fetchFromMIP(self):
-        print("Fetching with MIP")
-        payload = {'artist': self.artist, 'title': self.title}
-        r = requests.get('https://makeitpersonal.co/lyrics', params = payload)
-        if("Sorry, We don't have lyrics for this song yet" not in r.text):
-            self.lyric = r.text
-            if(self.album):
-                self.checkFolderExists(True)
-                fp = open(self.lyricspath, 'w+')
-                fp.write(self.lyric)
-                fp.close()
 
     def searchFolder(self):
         result = []
@@ -127,19 +96,12 @@ class SongData(object):
             print("Could not find file with lyrics for \"%s\"" % self.title)
         return retval
 
-    def getLyric(self, nofetch):
+    def getLyric(self):
         if self.title and (not self.artist or not self.album):
             self.searchFolder()
-        elif(not nofetch and self.artist and not self.title and not self.album):
-            self.fetchLyric()
-            return
         elif(self.checkFileExists()):
             if not self.lyric:
                 self.getLyricFromFile()
-        if not nofetch and self.title and self.artist and not self.lyric:
-            self.fetchFromMIP()
-        if not nofetch and self.artist and not self.lyric:
-            self.fetchLyric()
 
         if self.lyric:
             if self.lyric[1] == '\n':

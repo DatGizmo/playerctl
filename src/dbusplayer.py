@@ -21,7 +21,7 @@ class DbusPlayer(Player):
 
     def getSongData(s):
         song = s.mplayer.player.Metadata
-        td = SongData('', '', '', '', '', 0, 0)
+        td = SongData(None, None, None, None, None, 0, 0)
         if 'xesam:artist' in song:
             td.artist = song['xesam:artist'][0]
         if 'xesam:album' in song:

@@ -60,9 +60,9 @@ class Player:
     def classname(self):
         pass
 
-    def lyric(s, nofetch):
+    def lyric(s):
         sd = s.getSongData()
-        sd.getLyric(nofetch)
+        sd.getLyric()
 
     def tmux(s):
         printstr=""
@@ -93,7 +93,7 @@ class Player:
         else:
             print(titel)
 
-    def action(s, task, seekTime, nofetch):
+    def action(s, task, seekTime):
         if(task == Tasks.Daemon):
             #runDaemon()
             pass
@@ -124,5 +124,5 @@ class Player:
         elif(task == Tasks.Tmux):
             s.tmux()
         elif(task == Tasks.Lyric):
-            s.lyric(nofetch)
+            s.lyric()
 

@@ -19,7 +19,7 @@ class MpdPlayer(Player):
     def getSongData(s):
         song = s.mpc.currentsong()
         status = s.mpc.status()
-        td = SongData('', '', '', '', '', 0, 0)
+        td = SongData(None, None, None, None, None, 0, 0)
         if 'artist' in song:
             td.artist = song['artist']
         if 'album' in song:

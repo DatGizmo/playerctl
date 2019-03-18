@@ -4,6 +4,7 @@ from src.dbusplayer import DbusPlayer
 from src.mpdplayer import MpdPlayer
 from src.tasks import Tasks
 from src.songdata import SongData
+from src.lyricfetcher import LyricFetcher
 import getopt
 import psutil
 import sys
@@ -39,9 +40,9 @@ def printhelp():
     print('              mpd')
 
 def parscmd(argv):
-    global task, target, seekTime, songData, nofetch
+    global task, target, seekTime, songData, lyricFetcher
     try:
-        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause", "no-fetch"])
+        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause", "lyric-fetch"])
     except getopt.GetoptError:
         printhelp()
         sys.exit(2)
@@ -100,21 +101,21 @@ def parscmd(argv):
                 seekTime = timestr
         elif opt in ("--artist"):
             if songData is None:
-                songData = SongData(arg, '', '', '', '', 0, 0)
+                songData = SongData(arg, None, None, None, None, 0, 0)
             else:
                 songData.artist = arg
         elif opt in ("--title"):
             if songData is None:
-                songData = SongData('', '', '', arg, '', 0, 0)
+                songData = SongData(None, None, None, arg, None, 0, 0)
             else:
                 songData.title = arg
         elif opt in ("--album"):
             if songData is None:
-                songData = SongData('', arg, '', '', '', 0, 0)
+                songData = SongData(None, arg, None, None, None, 0, 0)
             else:
                 songData.album= arg
-        elif opt in ("--no-fetch"):
-            nofetch = True
+        elif opt in ("--lyric-fetch"):
+            lyricFetcher = LyricFetcher(None, None, None)
         else:
             print("Unkown option %s"% opt);
             printhelp()
@@ -165,16 +166,22 @@ def createAmazon():
     return DbusPlayer(AMAZON, AMAZON_PATH, AMAZON_VLC_IFACE, "Amazon")
 
 def main(argv):
-    global task, songData, target, nofetch
-    nofetch = False
+    global task, songData, target, lyricFetcher
+    lyricFetcher = None
+
     parscmd(argv)
     if(target == None):
         target = getRunningPlayer()
 
+    if(None != lyricFetcher and None != songData):
+        lyricFetcher.artist = songData.artist
+        lyricFetcher.album = songData.album
+        lyricFetcher.title = songData.title
+        lyricFetcher.fetchLyrics()
     if(task == Tasks.Lyric and songData != None):
-        songData.getLyric(nofetch)
+        songData.getLyric()
     elif(target != None):
-        target.action(task, seekTime, nofetch)
+        target.action(task, seekTime)
     elif(target == None):
         print("No running player found")
         sys.exit(1)
