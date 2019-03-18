@@ -72,6 +72,6 @@ class LyricFetcher(object):
         self.fetchFromMIP()
         self.fetchFromProvider(Genius())
         self.fetchFromProvider(LyricWiki())
-        self.fetchFromProvider(MusixMatch())
+#        self.fetchFromProvider(MusixMatch())
         self.fetchFromProvider(AzLyrics())
 
