@@ -98,8 +98,6 @@ class SongData(object):
                 start = instring.find('(')
             pos = instring.find(')')
             counter = instring.count(')')
-            print(pos)
-            print(counter)
             if( -1 == instring.find('(') and 0 <= pos):
                 if(counter == 1):
                     leng = len(instring)
