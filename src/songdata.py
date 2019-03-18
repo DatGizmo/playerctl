@@ -81,7 +81,7 @@ class SongData(object):
 
         if self.lyric[1] == '\n':
             self.lyric = self.lyric[2:len(self.lyric)]
-        if self.lyric[len(self.lyric)-1] == '\n':
+        if self.lyric[len(self.lyric)-2] == '\n' and self.lyric[len(self.lyric)-1] == '\n':
             self.lyric = self.lyric[0:len(self.lyric)-1]
 
         self.lyric += '\n'
@@ -89,10 +89,29 @@ class SongData(object):
         self.lyric += self.lyricspath[pos:len(self.lyricspath)]
         fp.close()
 
+    def removeBrackets(self, instring):
+        if instring:
+            start = instring.find('(')
+            while(0 <= start):
+                end = instring.find(')')
+                instring = instring[0:start-1] + instring[end+1:len(instring)]
+                start = instring.find('(')
+            pos = instring.find(')')
+            counter = instring.count(')')
+            print(pos)
+            print(counter)
+            if( -1 == instring.find('(') and 0 <= pos):
+                if(counter == 1):
+                    leng = len(instring)
+                    if(pos == leng-1):
+                        instring = instring[0:pos]
+        return instring
+
     def searchFolder(self):
         result = []
         retval = False
-        fileName = self.title.replace(' ', '-') + ".txt"
+        tit = self.removeBrackets(self.title)
+        fileName = tit.replace(' ', '-') + ".txt"
         for root, dirs, files in walk(self.lyricroot):
             for fp in files:
                 if fileName.lower() in fp.lower():
