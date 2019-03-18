@@ -78,6 +78,15 @@ class SongData(object):
     def getLyricFromFile(self):
         fp = open(self.lyricspath)
         self.lyric = fp.read()
+
+        if self.lyric[1] == '\n':
+            self.lyric = self.lyric[2:len(self.lyric)]
+        if self.lyric[len(self.lyric)-1] == '\n':
+            self.lyric = self.lyric[0:len(self.lyric)-1]
+
+        self.lyric += '\n'
+        pos = self.lyricspath.find("LyricsMaster") + len("LyricsMaster/")
+        self.lyric += self.lyricspath[pos:len(self.lyricspath)]
         fp.close()
 
     def searchFolder(self):
@@ -99,16 +108,11 @@ class SongData(object):
     def getLyric(self):
         if self.title and (not self.artist or not self.album):
             self.searchFolder()
-        elif(self.checkFileExists()):
+        elif(self.title and self.checkFileExists()):
             if not self.lyric:
                 self.getLyricFromFile()
 
         if self.lyric:
-            if self.lyric[1] == '\n':
-                self.lyric = self.lyric[2:len(self.lyric)]
-            if self.lyric[len(self.lyric)-1] == '\n':
-                self.lyric = self.lyric[0:len(self.lyric)-1]
-
             print(self)
             if self.lyric[0] != '\n':
                 print()
