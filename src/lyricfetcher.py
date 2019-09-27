@@ -55,12 +55,16 @@ class LyricFetcher(object):
             pass
 
     def fetchFromMIP(self):
-        if(not self.title or not self.album):
+        if(not self.title or not self.title):
             return
         print("Fetching with MIP")
         payload = {'artist': self.artist, 'title': self.title}
         r = requests.get('https://makeitpersonal.co/lyrics', params = payload)
-        if("Sorry, We don't have lyrics for this song yet" not in r.text):
+        if("Sorry, We don't have lyrics for this song yet" in r.text):
+            print(r.text)
+        elif("Something went wrong" in r.text):
+            print("Error on MIP side")
+        else:
             self.lyric = r.text
             if(self.album):
                 self.checkFolderExists(True)
@@ -69,9 +73,10 @@ class LyricFetcher(object):
                 fp.close()
 
     def fetchLyrics(self):
+        print("Fetching lyrics for %s - %s - %s" % (self.artist, self.album, self.title))
         self.fetchFromMIP()
         self.fetchFromProvider(Genius())
         self.fetchFromProvider(LyricWiki())
-#        self.fetchFromProvider(MusixMatch())
+        self.fetchFromProvider(MusixMatch())
         self.fetchFromProvider(AzLyrics())
 
