@@ -10,6 +10,7 @@ class DbusPlayer(Player):
         s.iface = dbus.Interface(s.obj, dbus_interface=ifacen)
         players_ids = list(pympris.available_players())
         s.mplayer = pympris.MediaPlayer(players_ids[0], s.bus)
+        s.player = s.mplayer.player
         s.status = s.mplayer.player.PlaybackStatus
         s.name = n
 
@@ -37,29 +38,39 @@ class DbusPlayer(Player):
         return td
 
     def toggle(s):
-        s.iface.PlayPause()
+        s.player.PlayPause()
 
     def play(s):
-        s.iface.Play()
+        s.player.Play()
 
     def pause(s):
-        s.iface.Pause()
+        s.player.Pause()
 
     def next(s):
-        s.iface.Next()
+        s.player.Next()
 
     def prev(s):
-        s.iface.Previous()
+        s.player.Previous()
 
     def stop(s):
-        s.iface.Stop()
+        s.player.Stop()
 
-    def volinc(self):
-        pass
+    def volinc(s):
+        if( s.name != "Spotify" ):
+            s.player.Volume = s.player.Volume + 3/100
+        else:
+            pass
 
-    def voldec(self):
-        pass
+    def voldec(s):
+        if( s.name != "Spotify" ):
+            s.player.Volume = s.player.Volume - 3/100
+        else:
+            pass
 
-    def seek(self, vol):
-        pass
+    def seek(s, val):
+        if( s.player.CanSeek ):
+            seeker = int(val) * 1000 * 1000
+            s.player.Seek(seeker)
+        else:
+            pass
 
