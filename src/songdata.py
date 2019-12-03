@@ -6,6 +6,7 @@ from os import makedirs
 from os import walk
 from os import removedirs
 from shutil import move
+import re
 
 class SongData(object):
     def __init__(self, artist, album, track, title, fn, length, elapsed):
@@ -89,27 +90,15 @@ class SongData(object):
         self.lyric += self.lyricspath[pos:len(self.lyricspath)]
         fp.close()
 
-    def removeBrackets(self, instring):
-        if instring:
-            start = instring.find('(')
-            while(0 <= start):
-                end = instring.find(')')
-                instring = instring[0:start-1] + instring[end+1:len(instring)]
-                start = instring.find('(')
-            pos = instring.find(')')
-            counter = instring.count(')')
-            if( -1 == instring.find('(') and 0 <= pos):
-                if(counter == 1):
-                    leng = len(instring)
-                    if(pos == leng-1):
-                        instring = instring[0:pos]
-        return instring
-
     def searchFolder(self):
         result = []
         retval = False
-        tit = self.removeBrackets(self.title)
-        fileName = tit.replace(' ', '-') + ".txt"
+        reg = re.compile(r"(\([\d]*\))|[\(\)\!]")
+        trailing = re.compile(r"[\s]$")
+        fileName = reg.sub("", self.title)
+        fileName = trailing.sub("", fileName)
+        fileName = fileName.replace(' ', '-') + ".txt"
+        print(fileName)
         for root, dirs, files in walk(self.lyricroot):
             for fp in files:
                 if fileName.lower() in fp.lower():
