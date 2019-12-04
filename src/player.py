@@ -17,8 +17,10 @@ class Player:
     def metadata(self):
         if self.playing():
             print(self.getSongData())
+        elif self.paused():
+            print(self.classname() + ": Paused")
         else:
-            print(self.classname() + ": Paused/Stopped")
+            print(self.classname() + ": Stopped")
 
     @abstractmethod
     def play(self):
@@ -57,6 +59,10 @@ class Player:
         pass
 
     @abstractmethod
+    def paused(self):
+        pass
+
+    @abstractmethod
     def classname(self):
         pass
 
@@ -68,7 +74,10 @@ class Player:
         printstr=""
         maxlen = 40
         mod = 15
-        titel = s.classname() + ": Paused/Stopped"
+        pause_stop = ": Stopped"
+        if s.paused():
+            pause_stop = ": Paused"
+        titel = s.classname() + pause_stop
         if s.playing():
             titel = s.getSongData().toString()
         length = len(titel)

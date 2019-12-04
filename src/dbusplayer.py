@@ -17,6 +17,9 @@ class DbusPlayer(Player):
     def playing(s):
         return ('play' in s.status.lower())
 
+    def paused(s):
+        return ('pause' in s.status.lower())
+
     def classname(s):
         return s.name
 

@@ -13,6 +13,9 @@ class MpdPlayer(Player):
     def playing(s):
         return (s.mpc.status()['state'] == "play")
 
+    def paused(s):
+        return (s.mpc.status()['state'] == "pause")
+
     def classname(s):
         return "MPD"
 
