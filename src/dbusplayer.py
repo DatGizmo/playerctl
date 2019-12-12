@@ -4,27 +4,46 @@ import pympris
 from src.songdata import SongData
 
 class DbusPlayer(Player):
-    def __init__(s, dest, path, ifacen, n):
-        s.bus = dbus.SessionBus()
-        s.obj = s.bus.get_object(dest, path)
-        s.iface = dbus.Interface(s.obj, dbus_interface=ifacen)
+    def __init__(s, dest, path, pids, n):
+        PID_DEST = "org.freedesktop.DBus"
+        PID_PATH = "/"
+        PID_IFACE = PID_DEST
+
+        bus = dbus.SessionBus()
+        pidObj = bus.get_object(PID_DEST, PID_PATH)
+        pidIface = dbus.Interface(pidObj, PID_IFACE)
+        s.players = []
+
+        if(len(pids) > 1):
+            for e in bus.list_names():
+                if dest in e:
+                    pid = pidIface.GetConnectionUnixProcessID(e)
+                    if pid in pids:
+                        s.players.append(pympris.MediaPlayer(e).player)
+                        pids.remove(pid)
+        else:
+            s.players.append(pympris.MediaPlayer(dest).player)
+
         players_ids = list(pympris.available_players())
-        s.mplayer = pympris.MediaPlayer(players_ids[0], s.bus)
-        s.player = s.mplayer.player
-        s.status = s.mplayer.player.PlaybackStatus
         s.name = n
 
+    @property
+    def Player(s):
+        # Get the first player (lowest pid) when we don't want to acess all players
+        if(len(s.players) > 0):
+            return s.players[0]
+
     def playing(s):
-        return ('play' in s.status.lower())
+        return ('play' in s.Player.PlaybackStatus.lower())
 
     def paused(s):
-        return ('pause' in s.status.lower())
+        return ('pause' in s.Player.PlaybackStatus.lower())
 
     def classname(s):
         return s.name
 
     def getSongData(s):
-        song = s.mplayer.player.Metadata
+        song = s.Player.Metadata
         td = SongData(None, None, None, None, None, 0, 0)
         if 'xesam:artist' in song:
             artist = str(song['xesam:artist'])
@@ -41,39 +60,40 @@ class DbusPlayer(Player):
         return td
 
     def toggle(s):
-        s.player.PlayPause()
+        for p in s.players:
+            p.PlayPause()
 
     def play(s):
-        s.player.Play()
+        s.Player.Play()
 
     def pause(s):
-        s.player.Pause()
+        s.Player.Pause()
 
     def next(s):
-        s.player.Next()
+        s.Player.Next()
 
     def prev(s):
-        s.player.Previous()
+        s.Player.Previous()
 
     def stop(s):
-        s.player.Stop()
+        s.Player.Stop()
 
     def volinc(s):
         if( s.name != "Spotify" ):
-            s.player.Volume = s.player.Volume + 3/100
+            s.Player.Volume = s.Players.Volume + 3/100
         else:
             pass
 
     def voldec(s):
         if( s.name != "Spotify" ):
-            s.player.Volume = s.player.Volume - 3/100
+            s.Player.Volume = s.Players.Volume - 3/100
         else:
             pass
 
     def seek(s, val):
-        if( s.player.CanSeek ):
+        if( s.Player.CanSeek ):
             seeker = int(val) * 1000 * 1000
-            s.player.Seek(seeker)
+            s.Player.Seek(seeker)
         else:
             pass
 

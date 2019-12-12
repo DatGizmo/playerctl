@@ -122,6 +122,13 @@ def parscmd(argv):
             printhelp()
             sys.exit(1)
 
+def getPids(player):
+    pids=[]
+    for p in psutil.process_iter():
+        if str(player) in str(p.name):
+            pids.append(p.pid)
+    return sorted(pids)
+
 def getPid(player):
     for p in psutil.process_iter():
         if str(player) in str(p.name):
@@ -141,8 +148,9 @@ def testMpdHost():
         s.close()
 
 def getRunningPlayer():
-    if(getPid("mpv")):
-        return createMpv()
+    pids = getPids("mpv")
+    if(len(pids) > 0):
+        return createMpv(pids)
     elif(getPid("spotify")):
         return createSpotify()
     elif(getPid("Nuvo")):
@@ -159,20 +167,19 @@ def createMpd():
 def createSpotify():
     SPOTIFY = 'org.mpris.MediaPlayer2.spotify'
     SPOT_PATH = '/org/mpris/MediaPlayer2'
-    SPOT_IFACE = 'org.mpris.MediaPlayer2.Player'
-    return DbusPlayer(SPOTIFY, SPOT_PATH, SPOT_IFACE, "Spotify")
+    pids = []
+    return DbusPlayer(SPOTIFY, SPOT_PATH, pids, "Spotify")
 
-def createMpv():
+def createMpv(pids):
     MPV = 'org.mpris.MediaPlayer2.mpv'
     MPV_PATH = '/org/mpris/MediaPlayer2'
-    MPV_IFACE = 'org.mpris.MediaPlayer2.Player'
-    return DbusPlayer(MPV, MPV_PATH, MPV_IFACE, "mpv")
+    return DbusPlayer(MPV, MPV_PATH, pids, "mpv")
 
 def createAmazon():
     AMAZON = 'org.mpris.MediaPlayer2.NuvolaOseAppAmazonCloudPlayer'
     AMAZON_PATH = '/org/mpris/MediaPlayer2'
-    AMAZON_IFACE = 'org.mpris.MediaPlayer2.Player'
-    return DbusPlayer(AMAZON, AMAZON_PATH, AMAZON_IFACE, "Amazon")
+    pids = []
+    return DbusPlayer(AMAZON, AMAZON_PATH, pids, "Amazon")
 
 def main(argv):
     global task, songData, target, lyricFetcher
