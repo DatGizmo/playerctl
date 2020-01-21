@@ -36,13 +36,19 @@ class SongData(object):
         if not retval:
             retval = self.filename
         if self.elapsed != 0:
-            retval += " - " + datetime.fromtimestamp(self.elapsed).strftime('%M:%S')
+            form='%M:%S'
+            if(60 < (self.elapsed/60)):
+                form='%H:%M:%S'
+            retval += " - " + datetime.utcfromtimestamp(self.elapsed).strftime(form)
         if self.length:
+            form='%M:%S'
+            if(60 < (self.length/60)):
+                form='%H:%M:%S'
             if self.elapsed == 0:
                 retval += " - "
             else:
                 retval += "/"
-            retval += datetime.fromtimestamp(self.length).strftime('%M:%S')
+            retval += datetime.utcfromtimestamp(self.length).strftime(form)
 
         return retval
 
