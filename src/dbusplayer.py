@@ -79,14 +79,23 @@ class DbusPlayer(Player):
         s.Player.Stop()
 
     def volinc(s):
-        if( s.name != "Spotify" ):
+        if(s.name != "Spotify"):
             s.Player.Volume = s.Players.Volume + 3/100
         else:
             pass
 
     def voldec(s):
-        if( s.name != "Spotify" ):
+        if(s.name != "Spotify"):
             s.Player.Volume = s.Players.Volume - 3/100
+        else:
+            pass
+
+    def mute(s):
+        if(s.name != "Spotify"):
+            if(s.Player.Volume > 0):
+                s.Player.Volume = 0.0
+            else:
+                s.Player.Volume = 1.0
         else:
             pass
 

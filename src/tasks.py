@@ -14,6 +14,7 @@ class Tasks:
     SecBwd = 13
     Seek = 14
     Lyric = 15
+    Mute = 16
     NONE = -1
 
 

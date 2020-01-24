@@ -23,6 +23,7 @@ def printhelp():
     print('              -t         toggle play/pause')
     print('              -l         Show lyrics for current song')
     print('              -m         get song metadata')
+    print('              -M         toggle volume between 0 and 100%')
     print('              -d         decrease volume')
     print('              -i         increase volume')
     print('              --pause ')
@@ -43,7 +44,7 @@ def printhelp():
 def parscmd(argv):
     global task, target, seekTime, songData, lyricFetcher
     try:
-        opts, args = getopt.getopt(argv, "lidhtsnmpa:PD", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause", "lyric-fetch"])
+        opts, args = getopt.getopt(argv, "lidhtsnmpa:PDM", ["help", "action=", "player=", "tmux", "sf", "sb", "seek=", "artist=", "title=", "album=", "pause", "lyric-fetch"])
     except getopt.GetoptError:
         printhelp()
         sys.exit(2)
@@ -71,6 +72,8 @@ def parscmd(argv):
             task = Tasks.Lyric
         elif opt == '-D':
             task = Tasks.Daemon
+        elif opt == '-M':
+            task = Tasks.Mute
         elif opt in ("--help"):
             printhelp()
             sys.exit(0)

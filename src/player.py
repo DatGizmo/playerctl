@@ -51,6 +51,10 @@ class Player:
         pass
 
     @abstractmethod
+    def mute(self):
+        pass
+
+    @abstractmethod
     def seek(self, vol):
         pass
 
@@ -134,4 +138,6 @@ class Player:
             s.tmux()
         elif(task == Tasks.Lyric):
             s.lyric()
+        elif(task == Tasks.Mute):
+            s.mute()
 

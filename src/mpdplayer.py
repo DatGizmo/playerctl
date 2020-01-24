@@ -10,6 +10,9 @@ class MpdPlayer(Player):
         s.mpc.connect(host, port)
         s.mpc.password(passwd)
 
+    def getVol(s):
+        return int(s.mpc.status()['volume'])
+
     def playing(s):
         return (s.mpc.status()['state'] == "play")
 
@@ -67,12 +70,19 @@ class MpdPlayer(Player):
         s.mpc.stop()
 
     def volinc(s):
-        vol = int(s.mpc.status()['volume'])
+        vol = s.getVol(s)
         s.mpc.setvol(vol+3)
 
     def voldec(s):
-        vol = int(s.mpc.status()['volume'])
+        vol = s.getVol(s)
         s.mpc.setvol(vol-3)
+
+    def mute(s):
+        vol = s.getVol()
+        if(0 < vol):
+            s.mpc.setvol(0)
+        else:
+            s.mpc.setvol(100)
 
     def seek(s, val):
         s.mpc.seekcur(val)
